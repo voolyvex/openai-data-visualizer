@@ -6,7 +6,7 @@ load_dotenv()
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 import text_to_speech as tts
-from explainer import retrieve_data_label, retrieve_data_summary # retrieve_data_insights, retrieve_data_visualization
+from explainer import retrieve_data_label, retrieve_data_summary
 
 TTS_ENABLED = True
 
@@ -29,7 +29,17 @@ def display_widgets() -> tuple[UploadedFile, str]:
 
 
 def retrieve_content_from_file(file: UploadedFile) -> str:
-    return file.getvalue().decode("ISO-8859-1")
+    file_contents = file.getvalue()
+    if file.name.endswith(".csv"):
+        return file_contents.decode("ISO-8859-1")
+    elif file.name.endswith(".txt"):
+        return file_contents.decode("utf-8")
+    elif file.name.endswith(".db"):
+        # replace the following line with the appropriate database query
+        return "SELECT * FROM table_name"
+    else:
+        raise ValueError(f"Unsupported file type: {file.name}")
+
 
 
 
@@ -58,17 +68,17 @@ def main() -> None:
         with st.spinner(text="Let me analyze it..."):
             label = retrieve_data_label(code=data_to_explain)
             summary = retrieve_data_summary(code=data_to_explain)
-            # insights = retrieve_data_insights(code=data_to_explain)
-            # visuals = retrieve_data_visualization(code=data_to_explain)
+            # insight = retrieve_data_insights(code=data_to_explain)
+            # visual = retrieve_data_visualization(code=data_to_explain)
 
-        with st.spinner(text="Give me a little bit more time, this data is complex..."):
+        with st.spinner(text="Give me a little more time, this data is complex..."):
             tts.convert_text_to_mp3(
                 message=label, voice_name=selected_voice, mp3_filename="label.mp3"
             )
         with st.spinner(
             text=(
-                "I created a label for this data."
-                "I'm thinking about how to summarize this in a few words now..."
+                "I created a label."
+                "I'm thinking about how to summarize this..."
             )
         ):
             tts.convert_text_to_mp3(
@@ -77,8 +87,8 @@ def main() -> None:
                 mp3_filename="summary.mp3",
             )
 
-        st.success("Task completed. Here is your summary about the data you provided.")
-        st.warning("Remember to turn on your audio!")
+        st.success("I completed my summary of the data.")
+        st.warning("Please enable audio...")
 
         st.markdown(f"**Label:** {label}")
         st.audio("label.mp3")
@@ -86,10 +96,22 @@ def main() -> None:
         st.markdown(f"**Summary:** {summary}")
         st.audio("summary.mp3")
 
-        # st.markdown(f"**Insights:** {insights}")
-        # st.audio("insights.mp3")
+        # with st.spinner(
+        #     text=(
+        #         "I'm analyzing the data now..."
+        #     )
+        # ):
+        #     tts.convert_text_to_mp3(
+        #         message=insight,
+        #         voice_name=selected_voice,
+        #         mp3_filename="insight.mp3",
+        #     )
+        # st.success("Done. Here is my take on the data you provided.")
 
-        # st.markdown(f"**Visualization:** {visuals}")
+        # st.markdown(f"**Insight:** {insight}")
+        # st.audio("insight.mp3")
+
+        # st.markdown(f"**Visualization:** {visual}")
         
         # st.altair_chart(visuals, use_container_width=False, theme="streamlit")
 
