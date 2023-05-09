@@ -30,12 +30,12 @@ def get_code_info(question: str, code: str) -> str:
 
 retrieve_data_label = partial(
     get_code_info,
-    question="Provide a pandas dataframe that summarizes this data set.",
+    question="Label this data in 2 words.",
 )
 
 retrieve_data_summary = partial(
     get_code_info,
-    question="Summarize this data in 1 word.",
+    question="Summarize this data in 1 sentence.",
 )
 
 # retrieve_data_insights = partial(
