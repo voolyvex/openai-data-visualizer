@@ -120,7 +120,7 @@ celerybeat.pid
 *.sage.py
 
 # Streamlit App secrets
-.streamlit\secrets.toml
+.streamlit/secrets.toml
 
 # Environments
 .env
