@@ -1,9 +1,12 @@
-# streamlit_app.py
+
 import pandas as pd
 from io import StringIO
 import streamlit as st
 import tableauserverclient as TSC
 
+def display_header() -> None:
+    st.image("img/logo.jpg")
+    st.title("Welcome to Tableau Visualizer")
 
 def main():
     # Set up connection.
@@ -14,6 +17,7 @@ def main():
     )
     server = TSC.Server(st.secrets["tableau"]["server_url"], use_server_version=True)
 
+    display_header()
 
     # Get various data.
     # Explore the tableauserverclient library for more options.
@@ -27,11 +31,11 @@ def main():
             workbooks_names = [w.name for w in workbooks]
 
             # Get views for first workbook.
-            server.workbooks.populate_views(workbooks[0])
-            views_names = [v.name for v in workbooks[0].views]
+            server.workbooks.populate_views(workbooks[3])
+            views_names = [v.name for v in workbooks[3].views]
 
             # Get image & CSV for first view of first workbook.
-            view_item = workbooks[0].views[0]
+            view_item = workbooks[3].views[1]
             server.views.populate_image(view_item)
             server.views.populate_csv(view_item)
             view_name = view_item.name
@@ -50,13 +54,13 @@ def main():
 
     st.subheader("👁️ Views")
     st.write(
-        f"Workbook *{workbooks_names[0]}* has the following views:",
+        f"Workbook *{workbooks_names[3]}* has the following views:",
         ", ".join(views_names),
     )
 
     st.subheader("🖼️ Image")
     st.write(f"Here's what view *{view_name}* looks like:")
-    st.image(view_image, width=300)
+    st.image(view_image, width=800)
 
     st.subheader("📊 Data")
     st.write(f"And here's the data for view *{view_name}*:")
