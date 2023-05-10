@@ -7,9 +7,6 @@ def embed_dashboard(tableau_url: str, tableau_options: dict) -> str:
         st.secrets["tableau"]["personal_access_token"],
         st.secrets["tableau"]["site_id"],
     )
-    print(st.secrets["tableau"]["token_name"])
-    print(st.secrets["tableau"]["personal_access_token"])
-    print(st.secrets["tableau"]["site_id"])
     server = TSC.Server(st.secrets["tableau"]["server_url"], use_server_version=True)
     
     with server.auth.sign_in(tableau_auth):
